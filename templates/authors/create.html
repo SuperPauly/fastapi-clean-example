@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - FastAPI Clean Architecture{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-plus me-2"></i>
+                    {{ title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/web/authors/create" novalidate>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-user me-1"></i>Author Name
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control {% if form_errors and form_errors.name %}is-invalid{% endif %}" 
+                            id="name" 
+                            name="name" 
+                            value="{{ form_data.name if form_data else '' }}"
+                            placeholder="Enter author's full name"
+                            required
+                            minlength="1"
+                            maxlength="100"
+                        >
+                        {% if form_errors and form_errors.name %}
+                        <div class="invalid-feedback">
+                            {{ form_errors.name }}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Enter the full name of the author (1-100 characters)
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Create Author
+                        </button>
+                        <a href="/web/authors" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Authors
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Hexagonal Architecture Info -->
+        <div class="card mt-4 border-info">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-layer-group me-2"></i>
+                    Hexagonal Architecture Flow
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="text-info">
+                            <i class="fas fa-globe fa-2x mb-2"></i>
+                            <h6>Web Layer</h6>
+                            <small>Jinja2 Template</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-warning">
+                            <i class="fas fa-cogs fa-2x mb-2"></i>
+                            <h6>Use Case</h6>
+                            <small>CreateAuthorUseCase</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-success">
+                            <i class="fas fa-database fa-2x mb-2"></i>
+                            <h6>Repository</h6>
+                            <small>AuthorRepository</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <small class="text-muted">
+                        Form → Controller → Use Case → Domain → Repository
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const nameInput = document.getElementById('name');
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Clear previous validation states
+        nameInput.classList.remove('is-invalid', 'is-valid');
+        
+        // Validate name
+        if (!nameInput.value.trim()) {
+            nameInput.classList.add('is-invalid');
+            isValid = false;
+        } else if (nameInput.value.trim().length < 1 || nameInput.value.trim().length > 100) {
+            nameInput.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            nameInput.classList.add('is-valid');
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+    
+    // Real-time validation
+    nameInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        this.classList.remove('is-invalid', 'is-valid');
+        
+        if (value.length > 0 && value.length <= 100) {
+            this.classList.add('is-valid');
+        } else if (value.length > 0) {
+            this.classList.add('is-invalid');
+        }
+    });
+});
+</script>
+{% endblock %}
+
