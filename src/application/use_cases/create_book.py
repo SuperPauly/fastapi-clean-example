@@ -1,8 +1,9 @@
 """Create book use case."""
 
-from dataclasses import dataclass
 from typing import List, Optional
 from uuid import UUID
+
+from pydantic import BaseModel, Field, ValidationError
 
 from src.application.ports.author_repository import AuthorRepositoryPort
 from src.application.ports.book_repository import BookRepositoryPort
@@ -12,19 +13,21 @@ from src.domain.services.library_service import LibraryService
 from src.domain.value_objects.book_title import BookTitle
 
 
-@dataclass
-class CreateBookRequest:
+class CreateBookRequest(BaseModel):
     """Request to create a book."""
-    title: str
-    author_ids: List[UUID]
+    title: str = Field(..., min_length=1, max_length=200, description="Book title")
+    author_ids: List[UUID] = Field(..., min_items=1, description="List of author IDs")
 
 
-@dataclass
-class CreateBookResponse:
+class CreateBookResponse(BaseModel):
     """Response from creating a book."""
-    book: Optional[Book]
-    success: bool
-    message: str
+    book: Optional[Book] = Field(None, description="Created book entity")
+    success: bool = Field(..., description="Whether the operation was successful")
+    message: str = Field(..., description="Result message")
+    
+    model_config = {
+        "arbitrary_types_allowed": True,  # Allow Book entity
+    }
 
 
 class CreateBookUseCase:
@@ -43,8 +46,8 @@ class CreateBookUseCase:
     async def execute(self, request: CreateBookRequest) -> CreateBookResponse:
         """Execute the create book use case."""
         try:
-            # Validate input
-            book_title = BookTitle(request.title)
+            # Validate input and create value object
+            book_title = BookTitle(value=request.title)
             
             # Check if book already exists
             existing_book = await self._book_repository.get_by_title(book_title.value)
@@ -85,18 +88,28 @@ class CreateBookUseCase:
                 message="Book created successfully"
             )
             
-        except ValueError as e:
-            self._logger.error(f"Invalid book data: {str(e)}")
+        except ValidationError as e:
+            error_msg = f"Invalid book data: {e}"
+            self._logger.error(error_msg)
             return CreateBookResponse(
                 book=None,
                 success=False,
-                message=f"Invalid book data: {str(e)}"
+                message=error_msg
+            )
+        except ValueError as e:
+            error_msg = f"Invalid book data: {str(e)}"
+            self._logger.error(error_msg)
+            return CreateBookResponse(
+                book=None,
+                success=False,
+                message=error_msg
             )
         except Exception as e:
-            self._logger.error(f"Failed to create book: {str(e)}")
+            error_msg = f"Failed to create book: {str(e)}"
+            self._logger.error(error_msg)
             return CreateBookResponse(
                 book=None,
                 success=False,
-                message=f"Failed to create book: {str(e)}"
+                message=error_msg
             )
 

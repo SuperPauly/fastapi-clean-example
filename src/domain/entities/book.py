@@ -1,25 +1,43 @@
 """Book domain entity."""
 
-from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Set
 from uuid import UUID, uuid4
+
+from pydantic import BaseModel, Field, field_validator
 
 from src.domain.value_objects.book_title import BookTitle
 
 
-@dataclass
-class Book:
+class Book(BaseModel):
     """Book domain entity representing a published book."""
     
-    id: Optional[UUID]
-    title: BookTitle
-    author_ids: List[UUID]
+    id: UUID = Field(default_factory=uuid4, description="Unique identifier for the book")
+    title: BookTitle = Field(..., description="Book's title")
+    author_ids: List[UUID] = Field(default_factory=list, description="List of author IDs associated with this book")
     
-    def __init__(self, title: BookTitle, id: Optional[UUID] = None, author_ids: Optional[List[UUID]] = None):
+    model_config = {
+        "frozen": False,  # Allow mutations for business operations
+        "validate_assignment": True,  # Validate on assignment
+        "arbitrary_types_allowed": True,  # Allow BookTitle value object
+    }
+    
+    def __init__(self, title: BookTitle, id: Optional[UUID] = None, author_ids: Optional[List[UUID]] = None, **data):
         """Initialize Book entity."""
-        self.id = id or uuid4()
-        self.title = title
-        self.author_ids = author_ids or []
+        super().__init__(
+            id=id or uuid4(),
+            title=title,
+            author_ids=author_ids or [],
+            **data
+        )
+    
+    @field_validator('author_ids')
+    @classmethod
+    def remove_duplicate_author_ids(cls, v: List[UUID]) -> List[UUID]:
+        """Remove duplicate author IDs while preserving order."""
+        if not v:
+            return []
+        seen: Set[UUID] = set()
+        return [author_id for author_id in v if not (author_id in seen or seen.add(author_id))]
     
     def add_author(self, author_id: UUID) -> None:
         """Add an author to this book."""

@@ -23,6 +23,12 @@ port = 6379
 db = 0
 url = "redis://localhost:6379/0"
 
+[default.taskiq]
+broker_url = "redis://localhost:6379/0"
+result_backend_url = "redis://localhost:6379/1"
+max_workers = 4
+prefetch_count = 10
+
 [default.logging]
 level = "INFO"
 format = "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} | {message}"
@@ -55,6 +61,10 @@ url = "postgresql://postgres:postgres@localhost:5432/fastapi_clean_test_db"
 db = 1
 url = "redis://localhost:6379/1"
 
+[testing.taskiq]
+broker_url = "redis://localhost:6379/1"
+result_backend_url = "redis://localhost:6379/2"
+
 [testing.logging]
 level = "DEBUG"
 
@@ -66,4 +76,3 @@ debug = false
 
 [production.logging]
 level = "WARNING"
-

@@ -1,7 +1,8 @@
 """Create author use case."""
 
-from dataclasses import dataclass
 from typing import Optional
+
+from pydantic import BaseModel, Field, ValidationError
 
 from src.application.ports.author_repository import AuthorRepositoryPort
 from src.application.ports.logger import LoggerPort
@@ -9,18 +10,20 @@ from src.domain.entities.author import Author
 from src.domain.value_objects.author_name import AuthorName
 
 
-@dataclass
-class CreateAuthorRequest:
+class CreateAuthorRequest(BaseModel):
     """Request to create an author."""
-    name: str
+    name: str = Field(..., min_length=1, max_length=100, description="Author's name")
 
 
-@dataclass
-class CreateAuthorResponse:
+class CreateAuthorResponse(BaseModel):
     """Response from creating an author."""
-    author: Author
-    success: bool
-    message: str
+    author: Optional[Author] = Field(None, description="Created author entity")
+    success: bool = Field(..., description="Whether the operation was successful")
+    message: str = Field(..., description="Result message")
+    
+    model_config = {
+        "arbitrary_types_allowed": True,  # Allow Author entity
+    }
 
 
 class CreateAuthorUseCase:
@@ -37,8 +40,8 @@ class CreateAuthorUseCase:
     async def execute(self, request: CreateAuthorRequest) -> CreateAuthorResponse:
         """Execute the create author use case."""
         try:
-            # Validate input
-            author_name = AuthorName(request.name)
+            # Validate input and create value object
+            author_name = AuthorName(value=request.name)
             
             # Check if author already exists
             existing_author = await self._author_repository.get_by_name(author_name.value)
@@ -62,18 +65,28 @@ class CreateAuthorUseCase:
                 message="Author created successfully"
             )
             
-        except ValueError as e:
-            self._logger.error(f"Invalid author data: {str(e)}")
+        except ValidationError as e:
+            error_msg = f"Invalid author data: {e}"
+            self._logger.error(error_msg)
             return CreateAuthorResponse(
                 author=None,
                 success=False,
-                message=f"Invalid author data: {str(e)}"
+                message=error_msg
+            )
+        except ValueError as e:
+            error_msg = f"Invalid author data: {str(e)}"
+            self._logger.error(error_msg)
+            return CreateAuthorResponse(
+                author=None,
+                success=False,
+                message=error_msg
             )
         except Exception as e:
-            self._logger.error(f"Failed to create author: {str(e)}")
+            error_msg = f"Failed to create author: {str(e)}"
+            self._logger.error(error_msg)
             return CreateAuthorResponse(
                 author=None,
                 success=False,
-                message=f"Failed to create author: {str(e)}"
+                message=error_msg
             )
 

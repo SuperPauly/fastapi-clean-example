@@ -100,6 +100,30 @@ class RedisConfig:
         return settings.REDIS.DB
 
 
+class TaskiqConfig:
+    """Taskiq task queue configuration."""
+    
+    @property
+    def broker_url(self) -> str:
+        """Get Taskiq broker URL."""
+        return settings.TASKIQ.BROKER_URL
+    
+    @property
+    def result_backend_url(self) -> str:
+        """Get Taskiq result backend URL."""
+        return settings.TASKIQ.RESULT_BACKEND_URL
+    
+    @property
+    def max_workers(self) -> int:
+        """Get maximum number of workers."""
+        return settings.TASKIQ.get("MAX_WORKERS", 4)
+    
+    @property
+    def prefetch_count(self) -> int:
+        """Get prefetch count for workers."""
+        return settings.TASKIQ.get("PREFETCH_COUNT", 10)
+
+
 class LoggingConfig:
     """Logging configuration."""
     
@@ -123,5 +147,5 @@ class LoggingConfig:
 database_config = DatabaseConfig()
 app_config = AppConfig()
 redis_config = RedisConfig()
+taskiq_config = TaskiqConfig()
 logging_config = LoggingConfig()
-

@@ -1,29 +1,34 @@
 """Author name value object."""
 
-from dataclasses import dataclass
+from pydantic import BaseModel, Field, field_validator
 
 
-@dataclass(frozen=True)
-class AuthorName:
+class AuthorName(BaseModel):
     """Value object representing an author's name."""
     
-    value: str
+    value: str = Field(..., description="The author's name")
     
-    def __post_init__(self) -> None:
+    model_config = {
+        "frozen": True,  # Immutable value object
+        "str_strip_whitespace": True,  # Automatically strip whitespace
+    }
+    
+    @field_validator('value')
+    @classmethod
+    def validate_name(cls, v: str) -> str:
         """Validate author name."""
-        if not self.value:
+        if not v:
             raise ValueError("Author name cannot be empty")
         
-        if len(self.value.strip()) == 0:
+        v = v.strip()
+        if len(v) == 0:
             raise ValueError("Author name cannot be only whitespace")
         
-        if len(self.value) > 100:
+        if len(v) > 100:
             raise ValueError("Author name cannot exceed 100 characters")
         
-        # Store normalized value
-        object.__setattr__(self, 'value', self.value.strip())
+        return v
     
     def __str__(self) -> str:
         """String representation."""
         return self.value
-
