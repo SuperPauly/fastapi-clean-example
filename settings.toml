@@ -1,0 +1,78 @@
+# Default configuration for FastAPI Clean Architecture Example
+
+[default]
+
+[default.app]
+name = "FastAPI Clean Architecture Example"
+version = "2.0.0"
+debug = false
+host = "0.0.0.0"
+port = 8000
+
+[default.database]
+host = "localhost"
+port = 5432
+name = "fastapi_clean_db"
+user = "postgres"
+password = "postgres"
+url = "postgresql://postgres:postgres@localhost:5432/fastapi_clean_db"
+
+[default.redis]
+host = "localhost"
+port = 6379
+db = 0
+url = "redis://localhost:6379/0"
+
+[default.taskiq]
+broker_url = "redis://localhost:6379/0"
+result_backend_url = "redis://localhost:6379/1"
+max_workers = 4
+prefetch_count = 10
+
+[default.logging]
+level = "INFO"
+format = "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} | {message}"
+file_path = "logs/app.log"
+
+# Development environment
+[development]
+
+[development.app]
+debug = true
+
+[development.database]
+name = "fastapi_clean_dev_db"
+url = "postgresql://postgres:postgres@localhost:5432/fastapi_clean_dev_db"
+
+[development.logging]
+level = "DEBUG"
+
+# Testing environment
+[testing]
+
+[testing.app]
+debug = true
+
+[testing.database]
+name = "fastapi_clean_test_db"
+url = "postgresql://postgres:postgres@localhost:5432/fastapi_clean_test_db"
+
+[testing.redis]
+db = 1
+url = "redis://localhost:6379/1"
+
+[testing.taskiq]
+broker_url = "redis://localhost:6379/1"
+result_backend_url = "redis://localhost:6379/2"
+
+[testing.logging]
+level = "DEBUG"
+
+# Production environment
+[production]
+
+[production.app]
+debug = false
+
+[production.logging]
+level = "WARNING"

@@ -1,15 +1,242 @@
-[tool.black]
-line-length = 60
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.isort]
-profile = "black"
-src_paths = ["configs", "core", "dependencies", "models", "repositories", "routers", "schemas", "services"]
-virtual_env = "env"
+[project]
+name = "fastapi-clean-example"
+dynamic = ["version"]
+description = "Clean Architecture Example using FastAPI framework with Hexagonal Architecture"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    { name = "SuperPauly", email = "paul@example.com" },
+]
+keywords = ["fastapi", "clean-architecture", "hexagonal-architecture", "python"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: FastAPI",
+]
+
+# Production dependencies only - what's needed to run the application
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "tortoise-orm[asyncpg]>=0.20.0",
+    "dynaconf>=3.2.0",
+    "loguru>=0.7.0",
+    "taskiq[redis]>=0.11.0",
+    "taskiq-redis>=0.5.0",
+    "redis>=5.0.0",
+    "pydantic>=2.4.0",
+    "pydantic-settings>=2.0.0",
+    "strawberry-graphql[fastapi]>=0.214.0",
+    "asyncpg>=0.29.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/SuperPauly/fastapi-clean-example#readme"
+Issues = "https://github.com/SuperPauly/fastapi-clean-example/issues"
+Source = "https://github.com/SuperPauly/fastapi-clean-example"
+
+[tool.hatch.version]
+path = "src/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+# Development environment - tools for development and code quality
+[tool.hatch.envs.dev]
+dependencies = [
+    "ruff>=0.1.0",
+    "mypy>=1.6.0",
+    "pre-commit>=3.5.0",
+    "black>=23.9.0",
+    "isort>=5.12.0",
+    "bandit>=1.7.5",
+    "safety>=2.3.0",
+    "strawberry-graphql[debug-server]>=0.214.0",
+]
+
+[tool.hatch.envs.dev.scripts]
+format = [
+    "ruff format .",
+    "ruff check --fix .",
+    "isort .",
+]
+lint = [
+    "ruff check .",
+    "mypy src/",
+    "bandit -r src/",
+]
+security = "safety check"
+all = [
+    "format",
+    "lint", 
+    "security",
+]
+
+# Test environment - testing tools and utilities
+[tool.hatch.envs.test]
+dependencies = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "httpx>=0.25.0",
+    "factory-boy>=3.3.0",
+    "faker>=19.0.0",
+    "taskiq[test]>=0.11.0",
+    # Include dev tools for testing
+    "ruff>=0.1.0",
+    "mypy>=1.6.0",
+]
+
+[tool.hatch.envs.test.scripts]
+test = "pytest {args:tests/}"
+test-cov = "pytest --cov=src --cov-report=html --cov-report=term-missing {args:tests/}"
+test-unit = "pytest -m unit {args:tests/}"
+test-integration = "pytest -m integration {args:tests/}"
+test-fast = "pytest -m 'not slow' {args:tests/}"
+
+# Production environment - minimal dependencies for deployment
+[tool.hatch.envs.production]
+skip-install = false
+dependencies = []
+
+[tool.hatch.envs.production.scripts]
+start = "uvicorn src.main:app --host 0.0.0.0 --port 8000"
+migrate = "aerich upgrade"
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "S",   # flake8-bandit
+    "T20", # flake8-print
+    "SIM", # flake8-simplify
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "E501",  # line too long, handled by formatter
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "S101",  # use of assert
+    "S104",  # hardcoded bind all interfaces
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["S101", "S106", "S108"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.mypy]
+python_version = "3.8"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+show_error_codes = true
+show_column_numbers = true
+
+[[tool.mypy.overrides]]
+module = [
+    "tortoise.*",
+    "taskiq.*",
+    "dynaconf.*",
+    "loguru.*",
+    "factory_boy.*",
+    "faker.*",
+    "strawberry.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-pythonpath = [
-  "."
+minversion = "7.0"
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--tb=short",
+    "-ra",
 ]
-testpaths = [
-  "__tests__"
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "taskiq: marks tests that require taskiq broker",
+    "e2e: End-to-end tests",
 ]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "*/__init__.py",
+    "*/conftest.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+    "TYPE_CHECKING",
+]
+show_missing = true
+precision = 2
+fail_under = 80
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
+
