@@ -53,6 +53,9 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "strawberry-graphql[fastapi]>=0.214.0",
     
+    # Rate limiting
+    "pyrate-limiter>=3.1.0",          # Rate limiting library
+    
     # Configuration management tool dependencies
     "textual>=5.0.1,<6.0.0",          # TUI framework
     "tomli-w>=1.0.0",                 # TOML writing support

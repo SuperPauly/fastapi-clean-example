@@ -23,6 +23,7 @@ from src.infrastructure.database.repositories.author_repository import AuthorRep
 from src.infrastructure.database.repositories.book_repository import BookRepository
 from src.infrastructure.logging.logger_adapter import LoguruLoggerAdapter
 from src.infrastructure.tasks.taskiq_adapter import TaskiqTaskQueueAdapter
+from src.infrastructure.rate_limiting.pyrate_adapter import PyrateLimiterAdapter
 
 
 class AuthorUseCases(NamedTuple):
@@ -95,6 +96,21 @@ def get_task_queue() -> TaskiqTaskQueueAdapter:
         TaskiqTaskQueueAdapter: Concrete implementation of TaskQueuePort
     """
     return TaskiqTaskQueueAdapter()
+
+
+@lru_cache()
+def get_rate_limiter() -> PyrateLimiterAdapter:
+    """Get rate limiter instance.
+    
+    This function demonstrates how to inject rate limiting adapters while
+    keeping the application layer independent of specific rate limiting
+    implementations (PyrateLimiter, Redis-based, etc.).
+    
+    Returns:
+        PyrateLimiterAdapter: Concrete implementation of RateLimiter port
+    """
+    # TODO: Get Redis URL from configuration
+    return PyrateLimiterAdapter()
 
 
 @lru_cache()
@@ -250,4 +266,3 @@ def get_dependency_container() -> DependencyContainer:
         DependencyContainer: The global dependency container
     """
     return _container
-

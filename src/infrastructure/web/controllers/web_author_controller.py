@@ -16,6 +16,7 @@ from src.application.use_cases.create_author import CreateAuthorUseCase, CreateA
 from src.application.use_cases.get_author import GetAuthorUseCase
 from src.application.use_cases.list_authors import ListAuthorsUseCase
 from src.infrastructure.dependencies import get_author_use_cases
+from src.infrastructure.rate_limiting.decorators import rate_limit
 
 # Initialize router and templates
 router = APIRouter(prefix="/web/authors", tags=["web-authors"])
@@ -23,6 +24,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/", response_class=HTMLResponse)
+@rate_limit("50/minute")  # Allow 50 page views per minute per IP
 async def authors_list_page(
     request: Request,
     use_cases = Depends(get_author_use_cases)
@@ -64,6 +66,7 @@ async def authors_list_page(
 
 
 @router.get("/create", response_class=HTMLResponse)
+@rate_limit("20/minute")  # Allow 20 form views per minute per IP
 async def create_author_page(request: Request):
     """Display create author form.
     
@@ -82,6 +85,7 @@ async def create_author_page(request: Request):
 
 
 @router.post("/create", response_class=HTMLResponse)
+@rate_limit("5/minute")  # Allow 5 form submissions per minute per IP
 async def create_author_form(
     request: Request,
     name: str = Form(...),
@@ -228,4 +232,3 @@ async def edit_author_page(
             "author": author_data
         }
     )
-
