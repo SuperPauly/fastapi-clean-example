@@ -12,7 +12,7 @@ requires-python = ">=3.8"
 authors = [
     { name = "SuperPauly", email = "paul@example.com" },
 ]
-keywords = ["fastapi", "clean-architecture", "hexagonal-architecture", "python"]
+keywords = ["fastapi", "clean-architecture", "hexagonal-architecture", "python", "ddd", "template"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -24,28 +24,63 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Framework :: FastAPI",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
 
-# Production dependencies only - what's needed to run the application
+# Production dependencies - what's needed to run the application
 dependencies = [
+    # Core FastAPI dependencies
     "fastapi>=0.104.0",
     "uvicorn[standard]>=0.24.0",
-    "tortoise-orm[asyncpg]>=0.20.0",
-    "dynaconf>=3.2.0",
-    "loguru>=0.7.0",
-    "taskiq[redis]>=0.11.0",
-    "taskiq-redis>=0.5.0",
-    "redis>=5.0.0",
+    
+    # Database dependencies
+    "tortoise-orm[asyncpg]>=0.20.0",  # PostgreSQL ORM
+    "asyncpg>=0.29.0",                # PostgreSQL async driver
+    
+    # Configuration management
+    "dynaconf>=3.2.11",               # Settings management
+    
+    # Logging
+    "loguru>=0.7.0",                  # Advanced logging
+    
+    # Task queue (keeping Taskiq from main branch as it's more modern)
+    "taskiq[redis]>=0.11.0",          # Task queue for background jobs
+    "taskiq-redis>=0.5.0",            # Redis broker for Taskiq
+    "redis>=5.0.0",                   # Redis client
+    
+    # Additional dependencies from main branch
     "pydantic>=2.4.0",
     "pydantic-settings>=2.0.0",
     "strawberry-graphql[fastapi]>=0.214.0",
-    "asyncpg>=0.29.0",
+    
+    # Configuration management tool dependencies
+    "textual>=5.0.1,<6.0.0",          # TUI framework
+    "tomli-w>=1.0.0",                 # TOML writing support
+]
+
+[project.optional-dependencies]
+dev = [
+    # Code quality and linting
+    "ruff>=0.1.0",                    # Fast Python linter and formatter
+    "mypy>=1.7.0",                    # Static type checker
+    
+    # Testing
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",                  # For testing FastAPI endpoints
+    
+    # Development tools
+    "pre-commit>=3.5.0",
 ]
 
 [project.urls]
 Documentation = "https://github.com/SuperPauly/fastapi-clean-example#readme"
 Issues = "https://github.com/SuperPauly/fastapi-clean-example/issues"
 Source = "https://github.com/SuperPauly/fastapi-clean-example"
+
+[project.scripts]
+manage-config = "manage_config:main"
 
 [tool.hatch.version]
 path = "src/__init__.py"
@@ -142,11 +177,17 @@ ignore = [
     "C901",  # too complex
     "S101",  # use of assert
     "S104",  # hardcoded bind all interfaces
+    # Allow non-abstract empty methods in abstract base classes
+    "B027",
+    # Allow boolean positional values in function calls, like `dict.get(... True)`
+    "FBT003",
+    # Ignore checks for possible passwords
+    "S105", "S106", "S107",
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/**/*" = ["S101", "S106", "S108"]
+"tests/**/*" = ["S101", "S106", "S108", "PLR2004", "TID252"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -156,6 +197,12 @@ line-ending = "auto"
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
+
+[tool.ruff.isort]
+known-first-party = ["fastapi_clean_example"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.mypy]
 python_version = "3.8"
@@ -180,8 +227,13 @@ module = [
     "factory_boy.*",
     "faker.*",
     "strawberry.*",
+    "tests.*",
 ]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 minversion = "7.0"
@@ -193,6 +245,7 @@ addopts = [
     "--strict-config",
     "--tb=short",
     "-ra",
+    "--import-mode=importlib",
 ]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
@@ -208,12 +261,18 @@ markers = [
 [tool.coverage.run]
 source = ["src"]
 branch = true
+parallel = true
 omit = [
     "*/tests/*",
     "*/migrations/*",
     "*/__init__.py",
     "*/conftest.py",
+    "src/fastapi_clean_example/__about__.py",
 ]
+
+[tool.coverage.paths]
+fastapi_clean_example = ["src/fastapi_clean_example", "*/fastapi-clean-example/src/fastapi_clean_example"]
+tests = ["tests", "*/fastapi-clean-example/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -228,6 +287,7 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
     "TYPE_CHECKING",
+    "no cov",
 ]
 show_missing = true
 precision = 2
@@ -239,4 +299,3 @@ directory = "htmlcov"
 [tool.bandit]
 exclude_dirs = ["tests"]
 skips = ["B101", "B601"]
-
