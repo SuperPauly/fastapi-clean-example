@@ -1,4 +1,4 @@
-# FastAPI Clean Architecture Template
+7# FastAPI Clean Architecture Template
 
 A production-ready FastAPI template implementing **Hexagonal Architecture** (Ports and Adapters) with modern Python tooling and best practices.
 
@@ -10,24 +10,24 @@ This template follows **Hexagonal Architecture** principles, ensuring clean sepa
 ┌─────────────────────────────────────────────────────────────┐
 │                    Infrastructure Layer                     │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │   FastAPI   │  │ PostgreSQL  │  │  Redis/Taskiq       │ │
-│  │   Routes    │  │  Tortoise   │  │  Task Queue         │ │
+│  │   FastAPI     │  │ PostgreSQL     │  │  Redis/Taskiq           │ │
+│  │   Routes      │  │  Tortoise      │  │  Task Queue             │ │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                    Application Layer                        │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │  Use Cases  │  │  Services   │  │      Ports          │ │
-│  │             │  │             │  │   (Interfaces)      │ │
+│  │  Use Cases    │  │  Services      │  │      Ports             │ │
+│  │               │  │                │  │   (Interfaces)         │ │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                      Domain Layer                           │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │  Entities   │  │    Value     │  │   Domain Services   │ │
-│  │             │  │   Objects    │  │                     │ │
+│  │  Entities     │  │    Value    b  │  │   Domain Services      │ │
+│  │               │  │   Objects      │  │                        │ │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
