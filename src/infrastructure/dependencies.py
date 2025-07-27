@@ -12,11 +12,7 @@ from typing import NamedTuple
 from src.application.use_cases.create_author import CreateAuthorUseCase
 from src.application.use_cases.get_author import GetAuthorUseCase
 from src.application.use_cases.list_authors import ListAuthorsUseCase
-from src.application.use_cases.update_author import UpdateAuthorUseCase
-from src.application.use_cases.delete_author import DeleteAuthorUseCase
 from src.application.use_cases.create_book import CreateBookUseCase
-from src.application.use_cases.get_book import GetBookUseCase
-from src.application.use_cases.list_books import ListBooksUseCase
 
 # Infrastructure layer imports
 from src.infrastructure.database.repositories.author_repository import AuthorRepository
@@ -24,6 +20,11 @@ from src.infrastructure.database.repositories.book_repository import BookReposit
 from src.infrastructure.logging.logger_adapter import LoguruLoggerAdapter
 from src.infrastructure.tasks.taskiq_adapter import TaskiqTaskQueueAdapter
 from src.infrastructure.rate_limiting.pyrate_adapter import PyrateLimiterAdapter
+
+# Logger configuration imports
+from src.infrastructure.config.logger_config_adapter import DynaconfLoggerConfigAdapter
+from src.infrastructure.logging.loguru_config_adapter import LoguruConfigAdapter
+from src.application.ports.logger_configuration import LoggerConfigurationPort, LoggerApplicationPort
 
 
 class AuthorUseCases(NamedTuple):
@@ -36,15 +37,11 @@ class AuthorUseCases(NamedTuple):
     create_author: CreateAuthorUseCase
     get_author: GetAuthorUseCase
     list_authors: ListAuthorsUseCase
-    update_author: UpdateAuthorUseCase
-    delete_author: DeleteAuthorUseCase
 
 
 class BookUseCases(NamedTuple):
     """Container for book-related use cases."""
     create_book: CreateBookUseCase
-    get_book: GetBookUseCase
-    list_books: ListBooksUseCase
 
 
 @lru_cache()
@@ -149,14 +146,6 @@ def get_author_use_cases() -> AuthorUseCases:
         list_authors=ListAuthorsUseCase(
             author_repository=author_repository,
             logger=logger
-        ),
-        update_author=UpdateAuthorUseCase(
-            author_repository=author_repository,
-            logger=logger
-        ),
-        delete_author=DeleteAuthorUseCase(
-            author_repository=author_repository,
-            logger=logger
         )
     )
 
@@ -185,14 +174,6 @@ def get_book_use_cases() -> BookUseCases:
             author_repository=author_repository,
             logger=logger,
             task_queue=task_queue
-        ),
-        get_book=GetBookUseCase(
-            book_repository=book_repository,
-            logger=logger
-        ),
-        list_books=ListBooksUseCase(
-            book_repository=book_repository,
-            logger=logger
         )
     )
 
@@ -266,3 +247,46 @@ def get_dependency_container() -> DependencyContainer:
         DependencyContainer: The global dependency container
     """
     return _container
+
+
+# Logger configuration dependencies
+
+@lru_cache()
+def get_logger_config_port() -> LoggerConfigurationPort:
+    """Get logger configuration port instance.
+    
+    This function provides the configuration persistence adapter for
+    the Loguru configuration tool, using Dynaconf for storage.
+    
+    Returns:
+        LoggerConfigurationPort: Configuration persistence adapter
+    """
+    return DynaconfLoggerConfigAdapter()
+
+
+@lru_cache()
+def get_logger_application_port() -> LoggerApplicationPort:
+    """Get logger application port instance.
+    
+    This function provides the Loguru integration adapter for
+    applying configurations to the actual logger.
+    
+    Returns:
+        LoggerApplicationPort: Loguru integration adapter
+    """
+    return LoguruConfigAdapter()
+
+
+async def get_logger_config_dependencies() -> tuple[LoggerConfigurationPort, LoggerApplicationPort]:
+    """Get logger configuration dependencies.
+    
+    This function provides both ports needed for the logger configuration
+    tool, following the hexagonal architecture pattern.
+    
+    Returns:
+        tuple: (config_port, logger_port) for dependency injection
+    """
+    config_port = get_logger_config_port()
+    logger_port = get_logger_application_port()
+    
+    return config_port, logger_port

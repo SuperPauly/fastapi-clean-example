@@ -1,0 +1,49 @@
+{
+  "id": "2e918ede-d7e3-47aa-98af-594eb71b74f7",
+  "name": "default",
+  "description": "Default Loguru configuration",
+  "enabled": true,
+  "global_level": {
+    "value": "DEBUG"
+  },
+  "handlers": [
+    {
+      "id": "d3bc1e37-e10a-4cad-8638-5f886300fcf0",
+      "name": "file",
+      "enabled": true,
+      "handler_type": "file",
+      "sink": "logs/test.log",
+      "level": {
+        "value": "INFO"
+      },
+      "format_config": {
+        "preset": "simple",
+        "custom_format": null,
+        "colorize": true,
+        "serialize": false,
+        "backtrace": true,
+        "diagnose": true
+      },
+      "rotation": {
+        "rotation_type": "none",
+        "size_limit": null,
+        "size_unit": "MB",
+        "time_interval": null,
+        "time_unit": "day",
+        "rotation_time": null,
+        "retention_count": null,
+        "retention_time": null,
+        "compression": null
+      },
+      "enqueue": false,
+      "catch": true,
+      "encoding": "utf-8",
+      "mode": "a",
+      "buffering": 1,
+      "filter_expression": null
+    }
+  ],
+  "activation": [],
+  "patcher": null,
+  "extra": {}
+}

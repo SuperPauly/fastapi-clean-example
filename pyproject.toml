@@ -84,6 +84,7 @@ Source = "https://github.com/SuperPauly/fastapi-clean-example"
 
 [project.scripts]
 manage-config = "manage_config:main"
+loguru-config = "loguru_config_tui:main"
 
 [tool.hatch.version]
 path = "src/__init__.py"
