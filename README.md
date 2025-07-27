@@ -1,6 +1,59 @@
-7# FastAPI Clean Architecture Template
+# FastAPI Clean Architecture Template
 
-A production-ready FastAPI template implementing **Hexagonal Architecture** (Ports and Adapters) with modern Python tooling and best practices.
+A production-ready FastAPI template implementing **Hexagonal Architecture** (Ports and Adapters) with modern Python tooling, comprehensive testing, and best practices for scalable web applications.
+
+## 🎯 What is this Package For?
+
+This template provides a **complete foundation** for building scalable, maintainable FastAPI applications using clean architecture principles. It's designed for:
+
+- **Enterprise Applications**: Production-ready structure with proper separation of concerns
+- **API Development**: RESTful APIs with automatic documentation and validation
+- **Microservices**: Clean boundaries and dependency injection for service-oriented architecture
+- **Learning**: Demonstrates hexagonal architecture, DDD, and modern Python practices
+- **Rapid Prototyping**: Pre-configured tooling and patterns for quick development
+
+## ✨ Features & Abilities
+
+### 🏗️ **Architecture & Design**
+- ✅ **Hexagonal Architecture** (Ports and Adapters pattern)
+- ✅ **Domain-Driven Design** (DDD) principles
+- ✅ **Dependency Injection** with proper inversion of control
+- ✅ **Clean separation** of domain, application, and infrastructure layers
+- ✅ **SOLID principles** implementation throughout
+
+### 🚀 **Core Technologies**
+- ✅ **FastAPI** - Modern, fast web framework with automatic API docs
+- ✅ **TortoiseORM** - Async ORM for PostgreSQL database operations
+- ✅ **Pydantic** - Data validation and serialization (not used as ORM)
+- ✅ **PostgreSQL** - Robust relational database with async support
+- ✅ **Redis** - Caching and task queue backend
+
+### ⚡ **Performance & Scalability**
+- ✅ **Async/Await** - Full asynchronous support throughout the stack
+- ✅ **Task Queue** - Background job processing with Taskiq
+- ✅ **Rate Limiting** - Built-in request rate limiting with PyrateLimiter
+- ✅ **Connection Pooling** - Optimized database connections
+- ✅ **Caching Strategies** - Redis-based caching implementation
+
+### 🛠️ **Development Experience**
+- ✅ **Hatch** - Modern Python project management (no Pipenv)
+- ✅ **Ruff** - Lightning-fast linting and code formatting
+- ✅ **MyPy** - Static type checking for better code quality
+- ✅ **Pre-commit Hooks** - Automated code quality checks
+- ✅ **Configuration Management** - Dynaconf for environment-specific settings
+
+### 🧪 **Testing & Quality**
+- ✅ **Comprehensive Test Suite** - Unit, integration, and E2E tests
+- ✅ **GitHub Actions CI/CD** - Automated testing and deployment
+- ✅ **Test Coverage** - Coverage reporting and enforcement
+- ✅ **Docker Support** - Containerized testing environments
+- ✅ **Factory Pattern** - Test data generation with Factory Boy
+
+### 📚 **Documentation & Examples**
+- ✅ **Interactive API Docs** - Automatic Swagger/OpenAPI documentation
+- ✅ **Architecture Guides** - Detailed explanations of design decisions
+- ✅ **Code Examples** - Real-world usage patterns and best practices
+- ✅ **Configuration Wizard** - Interactive setup tool for new projects
 
 ## 🏗️ Architecture Overview
 
@@ -10,24 +63,24 @@ This template follows **Hexagonal Architecture** principles, ensuring clean sepa
 ┌─────────────────────────────────────────────────────────────┐
 │                    Infrastructure Layer                     │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │   FastAPI     │  │ PostgreSQL     │  │  Redis/Taskiq           │ │
-│  │   Routes      │  │  Tortoise      │  │  Task Queue             │ │
+│  │   FastAPI   │  │ PostgreSQL  │  │  Redis/Taskiq       │ │
+│  │   Routes    │  │  Tortoise   │  │  Task Queue         │ │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                    Application Layer                        │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │  Use Cases    │  │  Services      │  │      Ports             │ │
-│  │               │  │                │  │   (Interfaces)         │ │
+│  │  Use Cases  │  │  Services   │  │      Ports          │ │
+│  │             │  │             │  │   (Interfaces)      │ │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                      Domain Layer                           │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │  Entities     │  │    Value    b  │  │   Domain Services      │ │
-│  │               │  │   Objects      │  │                        │ │
+│  │  Entities   │  │    Value    │  │   Domain Services   │ │
+│  │             │  │   Objects   │  │                     │ │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -35,20 +88,20 @@ This template follows **Hexagonal Architecture** principles, ensuring clean sepa
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.11+
+- Python 3.8+
 - PostgreSQL
 - Redis (for task queue)
 
 ### Installation
 
-1. **Clone the repository:**
+<details>
+<summary><strong>📦 Step 1: Clone and Setup</strong></summary>
+
 ```bash
+# Clone the repository
 git clone <your-repo-url>
 cd fastapi-clean-example
-```
 
-2. **Install dependencies using Hatch:**
-```bash
 # Install Hatch if you haven't already
 pip install hatch
 
@@ -58,66 +111,143 @@ hatch shell
 # Or run commands directly
 hatch run dev:python --version
 ```
+</details>
 
-3. **Configure environment:**
+<details>
+<summary><strong>⚙️ Step 2: Configuration</strong></summary>
+
 ```bash
-# Copy example settings
+# Use the interactive configuration wizard
+python manage_config.py
+
+# Or manually copy and edit settings
 cp settings.toml.example settings.toml
 
 # Update database and Redis settings in settings.toml
-```
+[database]
+url = "postgresql://user:password@localhost:5432/dbname"
 
-4. **Run the application:**
+[redis]
+url = "redis://localhost:6379/0"
+
+[rate_limiting]
+enabled = true
+default_rate = "100/minute"
+```
+</details>
+
+<details>
+<summary><strong>🚀 Step 3: Run the Application</strong></summary>
+
 ```bash
-# Development mode
+# Development mode with hot reload
 hatch run dev:uvicorn src.main:app --reload
 
 # Production mode
 hatch run uvicorn src.main:app --host 0.0.0.0 --port 8000
+
+# Run with task queue worker
+hatch run taskiq worker src.infrastructure.tasks.taskiq_adapter:broker
+
+# Access the application
+# API: http://localhost:8000
+# Docs: http://localhost:8000/docs
+# Admin: http://localhost:8000/admin
 ```
+</details>
 
 ## 📁 Project Structure
+
+<details>
+<summary><strong>🏗️ View Complete Project Structure</strong></summary>
 
 ```
 src/
 ├── domain/                     # Domain Layer (Business Logic)
 │   ├── entities/              # Business entities
+│   │   ├── author.py         # Author domain entity
+│   │   └── book.py           # Book domain entity
 │   ├── value_objects/         # Value objects
+│   │   ├── author_name.py    # Author name value object
+│   │   └── book_title.py     # Book title value object
 │   └── services/              # Domain services
+│       └── library_service.py # Domain business logic
 ├── application/               # Application Layer (Use Cases)
 │   ├── use_cases/            # Application use cases
+│   │   ├── create_author.py  # Create author use case
+│   │   ├── create_book.py    # Create book use case
+│   │   ├── get_author.py     # Get author use case
+│   │   └── list_authors.py   # List authors use case
 │   ├── services/             # Application services
+│   │   └── author_service.py # Author application service
 │   └── ports/                # Interfaces/Ports
-└── infrastructure/           # Infrastructure Layer (External Concerns)
-    ├── web/                  # FastAPI routes and controllers
-    ├── database/             # Database adapters
-    ├── tasks/                # Task queue adapters
-    ├── config/               # Configuration
-    └── logging/              # Logging adapters
+│       ├── author_repository.py # Author repository interface
+│       ├── book_repository.py   # Book repository interface
+│       ├── logger.py           # Logger interface
+│       ├── task_queue.py       # Task queue interface
+│       └── rate_limiter.py     # Rate limiter interface
+├── infrastructure/           # Infrastructure Layer (External Concerns)
+│   ├── web/                  # FastAPI routes and controllers
+│   │   ├── controllers/      # Web controllers
+│   │   └── middleware/       # Custom middleware
+│   ├── database/             # Database adapters
+│   │   ├── models/          # Tortoise ORM models
+│   │   ├── repositories/    # Repository implementations
+│   │   └── connection.py    # Database connection
+│   ├── tasks/                # Task queue adapters
+│   │   ├── handlers/        # Task handlers
+│   │   └── taskiq_adapter.py # Taskiq implementation
+│   ├── rate_limiting/        # Rate limiting implementation
+│   │   └── pyrate_adapter.py # PyrateLimiter adapter
+│   ├── config/               # Configuration
+│   │   └── settings.py      # Settings management
+│   └── logging/              # Logging adapters
+│       ├── logger_adapter.py # Logger implementation
+│       └── setup.py         # Logging setup
+└── presentation/             # Presentation Layer
+    ├── api/                  # API schemas
+    │   └── schemas/         # Pydantic schemas
+    └── graphql/             # GraphQL schemas (optional)
 ```
+</details>
 
 ## 🎯 Hexagonal Architecture Principles
+
+<details>
+<summary><strong>🏛️ Understanding the Architecture Layers</strong></summary>
 
 ### 1. **Domain Layer** (Core Business Logic)
 - Contains business entities, value objects, and domain services
 - No dependencies on external frameworks
 - Pure Python with business rules
+- Example: `Author`, `Book` entities with business validation
 
 ### 2. **Application Layer** (Use Cases)
 - Orchestrates domain objects to fulfill use cases
 - Defines ports (interfaces) for external dependencies
 - Contains application services and use cases
+- Example: `CreateAuthorUseCase`, `AuthorService`
 
 ### 3. **Infrastructure Layer** (External Concerns)
 - Implements adapters for ports defined in application layer
 - Contains FastAPI routes, database repositories, task queues
 - All external framework dependencies
+- Example: `AuthorRepositoryImpl`, `TaskiqAdapter`
+
+### 4. **Presentation Layer** (API Contracts)
+- Defines API schemas and contracts
+- Pydantic models for request/response validation
+- GraphQL schemas (if using GraphQL)
+- Example: `AuthorCreateSchema`, `AuthorResponseSchema`
+</details>
 
 ## 📝 How to Add New Features
 
-### Adding a New Entity
+<details>
+<summary><strong>🆕 Adding a New Entity (Complete Example)</strong></summary>
 
-1. **Create Domain Entity:**
+### 1. Create Domain Entity
+
 ```python
 # src/domain/entities/product.py
 from uuid import UUID, uuid4
@@ -142,29 +272,27 @@ class Product(BaseModel):
     }
 ```
 
-2. **Create Value Objects:**
+### 2. Create Value Objects
+
 ```python
 # src/domain/value_objects/product_name.py
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 class ProductName(BaseModel):
     """Product name value object."""
     
     value: str = Field(..., min_length=1, max_length=100)
     
-    @validator('value')
-    def validate_name(cls, v):
+    @field_validator('value')
+    @classmethod
+    def validate_name(cls, v: str) -> str:
         if not v.strip():
-            raise ValueError("Product name cannot be empty")
+            raise ValueError('Product name cannot be empty')
         return v.strip().title()
-    
-    model_config = {
-        "frozen": True,
-        "str_strip_whitespace": True,
-    }
 ```
 
-3. **Create Repository Port:**
+### 3. Create Repository Port
+
 ```python
 # src/application/ports/product_repository.py
 from abc import ABC, abstractmethod
@@ -173,8 +301,8 @@ from uuid import UUID
 
 from src.domain.entities.product import Product
 
-class ProductRepositoryPort(ABC):
-    """Port for product repository operations."""
+class ProductRepository(ABC):
+    """Product repository interface."""
     
     @abstractmethod
     async def create(self, product: Product) -> Product:
@@ -187,631 +315,276 @@ class ProductRepositoryPort(ABC):
         pass
     
     @abstractmethod
-    async def get_by_name(self, name: str) -> Optional[Product]:
-        """Get product by name."""
-        pass
-    
-    @abstractmethod
     async def list_all(self) -> List[Product]:
         """List all products."""
         pass
-    
-    @abstractmethod
-    async def update(self, product: Product) -> Product:
-        """Update existing product."""
-        pass
-    
-    @abstractmethod
-    async def delete(self, product_id: UUID) -> bool:
-        """Delete product by ID."""
-        pass
 ```
 
-4. **Create Use Case:**
+### 4. Implement Repository Adapter
+
 ```python
-# src/application/use_cases/create_product.py
-from typing import Optional
-from pydantic import BaseModel, Field, ValidationError
-
-from src.application.ports.product_repository import ProductRepositoryPort
-from src.application.ports.logger import LoggerPort
-from src.domain.entities.product import Product
-from src.domain.value_objects.product_name import ProductName
-from src.domain.value_objects.price import Price
-
-class CreateProductRequest(BaseModel):
-    """Request to create a product."""
-    name: str = Field(..., min_length=1, max_length=100)
-    price: float = Field(..., gt=0)
-
-class CreateProductResponse(BaseModel):
-    """Response from creating a product."""
-    product: Optional[Product] = Field(None)
-    success: bool = Field(...)
-    message: str = Field(...)
-    
-    model_config = {
-        "arbitrary_types_allowed": True,
-    }
-
-class CreateProductUseCase:
-    """Use case for creating a new product."""
-    
-    def __init__(
-        self, 
-        product_repository: ProductRepositoryPort,
-        logger: LoggerPort
-    ):
-        self._product_repository = product_repository
-        self._logger = logger
-    
-    async def execute(self, request: CreateProductRequest) -> CreateProductResponse:
-        """Execute the create product use case."""
-        try:
-            # Create value objects
-            product_name = ProductName(value=request.name)
-            price = Price(value=request.price)
-            
-            # Check if product already exists
-            existing_product = await self._product_repository.get_by_name(product_name.value)
-            if existing_product:
-                return CreateProductResponse(
-                    product=existing_product,
-                    success=False,
-                    message=f"Product '{product_name.value}' already exists"
-                )
-            
-            # Create new product
-            product = Product(name=product_name, price=price)
-            created_product = await self._product_repository.create(product)
-            
-            self._logger.info(f"Product created: {created_product.id}")
-            
-            return CreateProductResponse(
-                product=created_product,
-                success=True,
-                message="Product created successfully"
-            )
-            
-        except ValidationError as e:
-            error_msg = f"Invalid product data: {e}"
-            self._logger.error(error_msg)
-            return CreateProductResponse(
-                product=None,
-                success=False,
-                message=error_msg
-            )
-        except Exception as e:
-            error_msg = f"Failed to create product: {str(e)}"
-            self._logger.error(error_msg)
-            return CreateProductResponse(
-                product=None,
-                success=False,
-                message=error_msg
-            )
-```
-
-### Adding FastAPI Routes (Following Hexagonal Principles)
-
-1. **Create Route Controller:**
-```python
-# src/infrastructure/web/controllers/product_controller.py
-from typing import List
+# src/infrastructure/database/repositories/product_repository_impl.py
+from typing import List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
+from src.application.ports.product_repository import ProductRepository
+from src.domain.entities.product import Product
+from src.infrastructure.database.models.product_model import ProductModel
 
-from src.application.use_cases.create_product import CreateProductUseCase, CreateProductRequest
-from src.application.use_cases.get_product import GetProductUseCase
-from src.application.use_cases.list_products import ListProductsUseCase
-from src.infrastructure.dependencies import get_product_use_cases
-
-router = APIRouter(prefix="/products", tags=["products"])
-
-# Request/Response models for API
-class CreateProductAPIRequest(BaseModel):
-    """API request model for creating products."""
-    name: str
-    price: float
-
-class ProductAPIResponse(BaseModel):
-    """API response model for products."""
-    id: str
-    name: str
-    price: float
-
-@router.post("/", response_model=ProductAPIResponse, status_code=status.HTTP_201_CREATED)
-async def create_product(
-    request: CreateProductAPIRequest,
-    use_cases = Depends(get_product_use_cases)
-) -> ProductAPIResponse:
-    """Create a new product."""
+class ProductRepositoryImpl(ProductRepository):
+    """Product repository implementation using Tortoise ORM."""
     
-    # Convert API request to use case request
-    use_case_request = CreateProductRequest(
-        name=request.name,
-        price=request.price
-    )
-    
-    # Execute use case
-    response = await use_cases.create_product.execute(use_case_request)
-    
-    if not response.success:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=response.message
+    async def create(self, product: Product) -> Product:
+        """Create a new product."""
+        product_model = ProductModel(
+            id=product.id,
+            name=product.name.value,
+            price=float(product.price.value),
         )
+        await product_model.save()
+        return product
     
-    # Convert domain entity to API response
-    return ProductAPIResponse(
-        id=str(response.product.id),
-        name=response.product.name.value,
-        price=response.product.price.value
-    )
+    async def get_by_id(self, product_id: UUID) -> Optional[Product]:
+        """Get product by ID."""
+        try:
+            product_model = await ProductModel.get(id=product_id)
+            return Product(
+                id=product_model.id,
+                name=ProductName(value=product_model.name),
+                price=Price(value=product_model.price),
+            )
+        except DoesNotExist:
+            return None
+```
+</details>
 
-@router.get("/{product_id}", response_model=ProductAPIResponse)
+<details>
+<summary><strong>⚡ Adding Rate Limiting to Routes</strong></summary>
+
+### API Route Rate Limiting
+
+```python
+# src/infrastructure/web/controllers/api_product_controller.py
+from fastapi import APIRouter, Depends, HTTPException
+from src.infrastructure.rate_limiting.decorators import rate_limit
+
+router = APIRouter(prefix="/api/v1/products", tags=["products"])
+
+@router.post("/", response_model=ProductResponse)
+@rate_limit("10/minute")  # 10 requests per minute
+async def create_product(
+    product_data: ProductCreateRequest,
+    product_service: ProductService = Depends(get_product_service)
+):
+    """Create a new product with rate limiting."""
+    try:
+        product = await product_service.create_product(product_data)
+        return ProductResponse.from_domain(product)
+    except ValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/{product_id}")
+@rate_limit("100/minute")  # 100 requests per minute for read operations
 async def get_product(
     product_id: UUID,
-    use_cases = Depends(get_product_use_cases)
-) -> ProductAPIResponse:
-    """Get product by ID."""
-    
-    response = await use_cases.get_product.execute(product_id)
-    
-    if not response.success:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=response.message
-        )
-    
-    return ProductAPIResponse(
-        id=str(response.product.id),
-        name=response.product.name.value,
-        price=response.product.price.value
-    )
-
-@router.get("/", response_model=List[ProductAPIResponse])
-async def list_products(
-    use_cases = Depends(get_product_use_cases)
-) -> List[ProductAPIResponse]:
-    """List all products."""
-    
-    response = await use_cases.list_products.execute()
-    
-    return [
-        ProductAPIResponse(
-            id=str(product.id),
-            name=product.name.value,
-            price=product.price.value
-        )
-        for product in response.products
-    ]
+    product_service: ProductService = Depends(get_product_service)
+):
+    """Get product by ID with rate limiting."""
+    product = await product_service.get_product(product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return ProductResponse.from_domain(product)
 ```
 
-2. **Create Dependency Injection:**
+### Template Route Rate Limiting
+
 ```python
-# src/infrastructure/dependencies.py
-from functools import lru_cache
-from typing import NamedTuple
-
-from src.application.use_cases.create_product import CreateProductUseCase
-from src.application.use_cases.get_product import GetProductUseCase
-from src.application.use_cases.list_products import ListProductsUseCase
-from src.infrastructure.database.repositories.product_repository import ProductRepository
-from src.infrastructure.logging.logger_adapter import LoguruLoggerAdapter
-
-class ProductUseCases(NamedTuple):
-    """Container for product use cases."""
-    create_product: CreateProductUseCase
-    get_product: GetProductUseCase
-    list_products: ListProductsUseCase
-
-@lru_cache()
-def get_product_use_cases() -> ProductUseCases:
-    """Get product use cases with dependencies."""
-    
-    # Infrastructure adapters
-    product_repository = ProductRepository()
-    logger = LoguruLoggerAdapter()
-    
-    # Use cases
-    return ProductUseCases(
-        create_product=CreateProductUseCase(product_repository, logger),
-        get_product=GetProductUseCase(product_repository, logger),
-        list_products=ListProductsUseCase(product_repository, logger)
-    )
-```
-
-3. **Register Routes:**
-```python
-# src/infrastructure/web/api.py
-from fastapi import APIRouter
-
-from src.infrastructure.web.controllers.product_controller import router as product_router
-from src.infrastructure.web.controllers.author_controller import router as author_router
-
-api_router = APIRouter(prefix="/api/v1")
-
-# Register all route controllers
-api_router.include_router(product_router)
-api_router.include_router(author_router)
-```
-
-### Adding Jinja2 Templates (Web Interface)
-
-1. **Create Template Controller:**
-```python
-# src/infrastructure/web/controllers/web_controller.py
-from fastapi import APIRouter, Request, Depends, Form
-from fastapi.responses import HTMLResponse
+# src/infrastructure/web/controllers/web_product_controller.py
+from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
+from src.infrastructure.rate_limiting.decorators import rate_limit
 
-from src.application.use_cases.create_product import CreateProductUseCase, CreateProductRequest
-from src.application.use_cases.list_products import ListProductsUseCase
-from src.infrastructure.dependencies import get_product_use_cases
-
-router = APIRouter(prefix="/web", tags=["web"])
+router = APIRouter(prefix="/products", tags=["web"])
 templates = Jinja2Templates(directory="templates")
 
-@router.get("/products", response_class=HTMLResponse)
-async def products_page(
+@router.get("/")
+@rate_limit("50/minute")  # 50 page views per minute
+async def list_products(
     request: Request,
-    use_cases = Depends(get_product_use_cases)
+    product_service: ProductService = Depends(get_product_service)
 ):
-    """Display products page."""
-    
-    # Get products using use case
-    response = await use_cases.list_products.execute()
-    
+    """List products page with rate limiting."""
+    products = await product_service.list_products()
     return templates.TemplateResponse(
         "products/list.html",
-        {
-            "request": request,
-            "products": [
-                {
-                    "id": str(product.id),
-                    "name": product.name.value,
-                    "price": product.price.value
-                }
-                for product in response.products
-            ],
-            "title": "Products"
-        }
+        {"request": request, "products": products}
     )
 
-@router.get("/products/create", response_class=HTMLResponse)
-async def create_product_page(request: Request):
-    """Display create product form."""
-    
+@router.get("/create")
+@rate_limit("20/minute")  # 20 form views per minute
+async def create_product_form(request: Request):
+    """Create product form with rate limiting."""
     return templates.TemplateResponse(
         "products/create.html",
-        {
-            "request": request,
-            "title": "Create Product"
-        }
+        {"request": request}
     )
-
-@router.post("/products/create", response_class=HTMLResponse)
-async def create_product_form(
-    request: Request,
-    name: str = Form(...),
-    price: float = Form(...),
-    use_cases = Depends(get_product_use_cases)
-):
-    """Handle create product form submission."""
-    
-    # Create use case request
-    use_case_request = CreateProductRequest(name=name, price=price)
-    
-    # Execute use case
-    response = await use_cases.create_product.execute(use_case_request)
-    
-    if response.success:
-        # Redirect to products list on success
-        return templates.TemplateResponse(
-            "products/create.html",
-            {
-                "request": request,
-                "title": "Create Product",
-                "success_message": response.message
-            }
-        )
-    else:
-        # Show form with error
-        return templates.TemplateResponse(
-            "products/create.html",
-            {
-                "request": request,
-                "title": "Create Product",
-                "error_message": response.message,
-                "form_data": {"name": name, "price": price}
-            }
-        )
 ```
 
-2. **Create Jinja2 Templates:**
+### Custom Rate Limiting Strategies
 
-**Base Template:**
-```html
-<!-- templates/base.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FastAPI Clean Architecture{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">FastAPI Clean Architecture</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/web/products">Products</a>
-                <a class="nav-link" href="/web/authors">Authors</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        {% if success_message %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ success_message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endif %}
-
-        {% if error_message %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ error_message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endif %}
-
-        {% block content %}{% endblock %}
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-```
-
-**Products List Template:**
-```html
-<!-- templates/products/list.html -->
-{% extends "base.html" %}
-
-{% block title %}{{ title }} - FastAPI Clean Architecture{% endblock %}
-
-{% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{{ title }}</h1>
-    <a href="/web/products/create" class="btn btn-primary">Create Product</a>
-</div>
-
-<div class="row">
-    {% for product in products %}
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">
-                    <strong>Price:</strong> ${{ "%.2f"|format(product.price) }}
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">ID: {{ product.id }}</small>
-                </p>
-            </div>
-        </div>
-    </div>
-    {% else %}
-    <div class="col-12">
-        <div class="alert alert-info">
-            No products found. <a href="/web/products/create">Create one now</a>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endblock %}
-```
-
-**Create Product Template:**
-```html
-<!-- templates/products/create.html -->
-{% extends "base.html" %}
-
-{% block title %}{{ title }} - FastAPI Clean Architecture{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h1>{{ title }}</h1>
-        
-        <form method="post" action="/web/products/create">
-            <div class="mb-3">
-                <label for="name" class="form-label">Product Name</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="name" 
-                    name="name" 
-                    value="{{ form_data.name if form_data else '' }}"
-                    required
-                >
-            </div>
-            
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input 
-                    type="number" 
-                    step="0.01" 
-                    min="0.01"
-                    class="form-control" 
-                    id="price" 
-                    name="price" 
-                    value="{{ form_data.price if form_data else '' }}"
-                    required
-                >
-            </div>
-            
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Create Product</button>
-                <a href="/web/products" class="btn btn-secondary">Cancel</a>
-            </div>
-        </form>
-    </div>
-</div>
-{% endblock %}
-```
-
-3. **Configure Templates in Main App:**
 ```python
-# src/main.py
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-
-from src.infrastructure.web.api import api_router
-from src.infrastructure.web.controllers.web_controller import router as web_router
-
-app = FastAPI(title="FastAPI Clean Architecture")
-
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Include API routes
-app.include_router(api_router)
-
-# Include web routes
-app.include_router(web_router)
-
-@app.get("/")
-async def root():
-    """Root endpoint."""
-    return {"message": "FastAPI Clean Architecture Template"}
+# Different rate limiting strategies
+@rate_limit("100/minute")           # Per IP address
+@rate_limit("1000/hour")           # Per hour limit
+@rate_limit("10/minute", per="user") # Per authenticated user
+@rate_limit("5/minute", per="endpoint") # Per specific endpoint
 ```
+</details>
 
 ## 🧪 Testing
 
-### Running Tests
+<details>
+<summary><strong>🔬 Running Tests</strong></summary>
+
 ```bash
 # Run all tests
-hatch run test:pytest
+hatch run test:test
 
 # Run with coverage
-hatch run test:pytest --cov=src --cov-report=html
+hatch run test:test-cov
 
-# Run specific test file
-hatch run test:pytest tests/test_use_cases.py
+# Run specific test types
+hatch run test:test-unit        # Unit tests only
+hatch run test:test-integration # Integration tests only
+hatch run test:test-fast        # Skip slow tests
 
-# Run with verbose output
-hatch run test:pytest -v
+# Run tests with specific markers
+pytest -m "not slow"           # Skip slow tests
+pytest -m "integration"        # Integration tests only
+pytest -m "unit"              # Unit tests only
 ```
+</details>
 
-### Writing Tests Following Hexagonal Principles
+<details>
+<summary><strong>📊 Test Coverage</strong></summary>
 
-```python
-# tests/test_create_product_use_case.py
-import pytest
-from unittest.mock import AsyncMock
-
-from src.application.use_cases.create_product import CreateProductUseCase, CreateProductRequest
-from src.domain.entities.product import Product
-from src.domain.value_objects.product_name import ProductName
-from src.domain.value_objects.price import Price
-
-@pytest.mark.asyncio
-async def test_create_product_success(mock_product_repository, mock_logger):
-    """Test successful product creation."""
-    
-    # Arrange
-    mock_product_repository.get_by_name.return_value = None
-    mock_product_repository.create.return_value = Product(
-        name=ProductName(value="Test Product"),
-        price=Price(value=99.99)
-    )
-    
-    use_case = CreateProductUseCase(mock_product_repository, mock_logger)
-    request = CreateProductRequest(name="Test Product", price=99.99)
-    
-    # Act
-    response = await use_case.execute(request)
-    
-    # Assert
-    assert response.success is True
-    assert response.product is not None
-    assert response.product.name.value == "Test Product"
-    assert response.product.price.value == 99.99
-    mock_product_repository.create.assert_called_once()
-    mock_logger.info.assert_called()
-
-@pytest.mark.asyncio
-async def test_create_product_already_exists(mock_product_repository, mock_logger):
-    """Test product creation when product already exists."""
-    
-    # Arrange
-    existing_product = Product(
-        name=ProductName(value="Existing Product"),
-        price=Price(value=50.00)
-    )
-    mock_product_repository.get_by_name.return_value = existing_product
-    
-    use_case = CreateProductUseCase(mock_product_repository, mock_logger)
-    request = CreateProductRequest(name="Existing Product", price=99.99)
-    
-    # Act
-    response = await use_case.execute(request)
-    
-    # Assert
-    assert response.success is False
-    assert "already exists" in response.message
-    mock_product_repository.create.assert_not_called()
-```
-
-## 🔧 Development Tools
-
-### Code Quality
 ```bash
-# Format code with Ruff
-hatch run dev:ruff format .
+# Generate coverage report
+hatch run test:test-cov
 
-# Lint code with Ruff
-hatch run dev:ruff check .
+# View HTML coverage report
+open htmlcov/index.html
 
-# Type check with MyPy
-hatch run dev:mypy src/
-
-# Run pre-commit hooks
-hatch run dev:pre-commit run --all-files
+# Coverage requirements
+# - Minimum 80% coverage enforced
+# - Unit tests for all domain logic
+# - Integration tests for repositories
+# - E2E tests for API endpoints
 ```
+</details>
 
-### Task Queue
+## 🛠️ Development Tools
+
+<details>
+<summary><strong>🔧 Code Quality Tools</strong></summary>
+
 ```bash
-# Start Taskiq worker
-hatch run taskiq worker src.infrastructure.tasks.taskiq_adapter:broker
+# Format code
+hatch run dev:format
 
-# Monitor tasks
-hatch run taskiq monitor src.infrastructure.tasks.taskiq_adapter:broker
+# Lint code
+hatch run dev:lint
+
+# Type checking
+hatch run dev:typing
+
+# Security scan
+hatch run dev:security
+
+# Run all quality checks
+hatch run dev:all
 ```
+</details>
 
-## 📚 Key Benefits of This Architecture
+<details>
+<summary><strong>📝 Pre-commit Hooks</strong></summary>
 
-1. **🔄 Testability**: Easy to mock dependencies and test business logic in isolation
-2. **🔧 Maintainability**: Clear separation of concerns makes code easier to understand and modify
-3. **🚀 Scalability**: Can easily swap implementations without affecting business logic
-4. **🛡️ Flexibility**: Framework-agnostic domain layer protects against technology changes
-5. **📈 Extensibility**: Easy to add new features following established patterns
+```bash
+# Install pre-commit hooks
+pre-commit install
 
-## 🤝 Contributing
+# Run hooks manually
+pre-commit run --all-files
 
-1. Follow the hexagonal architecture principles
-2. Write tests for all new features
-3. Use Pydantic for data validation
-4. Keep domain logic pure (no external dependencies)
-5. Use dependency injection for all external services
+# Update hooks
+pre-commit autoupdate
+```
+</details>
+
+## 🚀 Deployment
+
+<details>
+<summary><strong>🐳 Docker Deployment</strong></summary>
+
+```bash
+# Build production image
+docker build -t fastapi-clean-app .
+
+# Run with docker-compose
+docker-compose up -d
+
+# Environment-specific deployment
+docker-compose -f docker-compose.prod.yml up -d
+```
+</details>
+
+<details>
+<summary><strong>☁️ Cloud Deployment</strong></summary>
+
+The template includes configurations for:
+- **AWS ECS/Fargate** - Container orchestration
+- **Google Cloud Run** - Serverless containers
+- **Azure Container Instances** - Managed containers
+- **Kubernetes** - Full orchestration platform
+</details>
+
+## 📚 Additional Resources
+
+<details>
+<summary><strong>📖 Learning Resources</strong></summary>
+
+- [Hexagonal Architecture Guide](./docs/hexagonal-architecture.md)
+- [Domain-Driven Design Patterns](./docs/ddd-patterns.md)
+- [Testing Strategies](./docs/testing-guide.md)
+- [Configuration Management](./CONFIG_TOOL_README.md)
+- [Development Guide](./DEVELOPMENT_GUIDE.md)
+</details>
+
+<details>
+<summary><strong>🤝 Contributing</strong></summary>
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
+</details>
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🙏 Acknowledgments
+
+- **FastAPI** - Modern, fast web framework
+- **Tortoise ORM** - Async ORM inspired by Django ORM
+- **Pydantic** - Data validation using Python type hints
+- **Hatch** - Modern Python project management
+- **Clean Architecture** - Robert C. Martin's architectural principles
+
+---
+
+**Built with ❤️ using Hexagonal Architecture principles**

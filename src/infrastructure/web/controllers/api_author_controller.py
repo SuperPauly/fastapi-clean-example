@@ -17,6 +17,7 @@ from src.application.use_cases.list_authors import ListAuthorsUseCase
 from src.application.use_cases.update_author import UpdateAuthorUseCase, UpdateAuthorRequest
 from src.application.use_cases.delete_author import DeleteAuthorUseCase
 from src.infrastructure.dependencies import get_author_use_cases
+from src.infrastructure.rate_limiting.decorators import rate_limit
 
 # Initialize router
 router = APIRouter(prefix="/api/v1/authors", tags=["authors"])
@@ -68,9 +69,11 @@ class APIErrorResponse(BaseModel):
     status_code=status.HTTP_201_CREATED,
     responses={
         400: {"model": APIErrorResponse, "description": "Invalid input"},
-        409: {"model": APIErrorResponse, "description": "Author already exists"}
+        409: {"model": APIErrorResponse, "description": "Author already exists"},
+        429: {"model": APIErrorResponse, "description": "Rate limit exceeded"}
     }
 )
+@rate_limit("10/minute")  # Allow 10 author creations per minute per IP
 async def create_author(
     request: CreateAuthorAPIRequest,
     use_cases = Depends(get_author_use_cases)
@@ -127,9 +130,11 @@ async def create_author(
     "/",
     response_model=AuthorListAPIResponse,
     responses={
+        429: {"model": APIErrorResponse, "description": "Rate limit exceeded"},
         500: {"model": APIErrorResponse, "description": "Internal server error"}
     }
 )
+@rate_limit("100/minute")  # Allow 100 list requests per minute per IP
 async def list_authors(
     use_cases = Depends(get_author_use_cases)
 ) -> AuthorListAPIResponse:
@@ -172,9 +177,11 @@ async def list_authors(
     response_model=AuthorAPIResponse,
     responses={
         404: {"model": APIErrorResponse, "description": "Author not found"},
-        400: {"model": APIErrorResponse, "description": "Invalid author ID"}
+        400: {"model": APIErrorResponse, "description": "Invalid author ID"},
+        429: {"model": APIErrorResponse, "description": "Rate limit exceeded"}
     }
 )
+@rate_limit("200/minute")  # Allow 200 get requests per minute per IP
 async def get_author(
     author_id: UUID,
     use_cases = Depends(get_author_use_cases)
@@ -328,4 +335,3 @@ async def delete_author(
             )
     
     # Return 204 No Content (no response body needed)
-
