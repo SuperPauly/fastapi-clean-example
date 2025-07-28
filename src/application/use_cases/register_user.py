@@ -7,6 +7,7 @@ hexagonal architecture principles.
 
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
+from datetime import timedelta
 
 from ..ports.user_repository import UserRepositoryPort, UserAlreadyExistsError
 from ..ports.authentication_service import AuthenticationServicePort
@@ -369,4 +370,3 @@ class RegisterUserUseCase:
                 "error_message": "Failed to resend verification email",
                 "error_code": "INTERNAL_ERROR"
             }
-

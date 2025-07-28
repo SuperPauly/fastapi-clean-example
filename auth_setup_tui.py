@@ -659,8 +659,9 @@ def main():
     
     args = parser.parse_args()
     
-    if not TEXTUAL_AVAILABLE and (args.interactive or not any([args.generate_secrets])):
+    if not TEXTUAL_AVAILABLE and (args.interactive or not any([args.generate_secrets, args.provider])):
         print("❌ Textual is required for interactive mode. Install with: pip install textual")
+        print("💡 You can still use CLI options like --generate-secrets")
         sys.exit(1)
     
     config = AuthSetupConfig(args.config_file)
@@ -696,4 +697,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
