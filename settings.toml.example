@@ -136,11 +136,126 @@ password_require_special = true
 jwt_algorithm = "HS256"
 jwt_expire_minutes = 30
 jwt_refresh_expire_days = 7
+jwt_secret_key = "your-jwt-secret-key-change-this-in-production"
 
 # Session settings
 session_expire_minutes = 60
 session_cookie_secure = true
 session_cookie_httponly = true
+session_secret_key = "your-session-secret-key-change-this-in-production"
+
+[authentication]
+# Authentication configuration
+enable_registration = true
+enable_email_verification = true
+enable_password_reset = true
+enable_social_login = true
+enable_rbac = true
+default_user_role = "user"
+
+# Email verification settings
+email_verification_expire_hours = 24
+email_verification_required = true
+resend_verification_cooldown_minutes = 5
+
+# Password reset settings
+password_reset_expire_hours = 2
+password_reset_cooldown_minutes = 15
+
+# Account lockout settings
+max_login_attempts = 5
+lockout_duration_minutes = 30
+enable_account_lockout = true
+
+# User roles and permissions
+available_roles = ["user", "moderator", "admin", "superuser"]
+role_hierarchy = {
+    "user" = 1,
+    "moderator" = 2, 
+    "admin" = 3,
+    "superuser" = 4
+}
+
+[oauth]
+# OAuth configuration
+redirect_url = "http://localhost:8000/auth/callback"
+state_secret = "your-oauth-state-secret-change-this"
+
+# Google OAuth
+google_enabled = false
+google_client_id = "your-google-client-id"
+google_client_secret = "your-google-client-secret"
+google_scopes = ["openid", "email", "profile"]
+
+# GitHub OAuth
+github_enabled = false
+github_client_id = "your-github-client-id"
+github_client_secret = "your-github-client-secret"
+github_scopes = ["user:email"]
+
+# Facebook OAuth
+facebook_enabled = false
+facebook_client_id = "your-facebook-app-id"
+facebook_client_secret = "your-facebook-app-secret"
+facebook_scopes = ["email", "public_profile"]
+
+# X (Twitter) OAuth
+twitter_enabled = false
+twitter_client_id = "your-twitter-client-id"
+twitter_client_secret = "your-twitter-client-secret"
+twitter_scopes = ["tweet.read", "users.read"]
+
+# LinkedIn OAuth
+linkedin_enabled = false
+linkedin_client_id = "your-linkedin-client-id"
+linkedin_client_secret = "your-linkedin-client-secret"
+linkedin_scopes = ["r_liteprofile", "r_emailaddress"]
+
+# Microsoft Live OAuth
+microsoft_enabled = false
+microsoft_client_id = "your-microsoft-client-id"
+microsoft_client_secret = "your-microsoft-client-secret"
+microsoft_scopes = ["openid", "profile", "email"]
+
+# Steam OAuth
+steam_enabled = false
+steam_api_key = "your-steam-api-key"
+steam_return_to = "http://localhost:8000/auth/steam/callback"
+
+# Twilio OAuth
+twilio_enabled = false
+twilio_account_sid = "your-twilio-account-sid"
+twilio_auth_token = "your-twilio-auth-token"
+
+# Twitch OAuth
+twitch_enabled = false
+twitch_client_id = "your-twitch-client-id"
+twitch_client_secret = "your-twitch-client-secret"
+twitch_scopes = ["user:read:email"]
+
+# Spotify OAuth
+spotify_enabled = false
+spotify_client_id = "your-spotify-client-id"
+spotify_client_secret = "your-spotify-client-secret"
+spotify_scopes = ["user-read-email", "user-read-private"]
+
+# StackOverflow OAuth
+stackoverflow_enabled = false
+stackoverflow_client_id = "your-stackoverflow-client-id"
+stackoverflow_client_secret = "your-stackoverflow-client-secret"
+stackoverflow_key = "your-stackoverflow-key"
+
+# Instagram OAuth
+instagram_enabled = false
+instagram_client_id = "your-instagram-client-id"
+instagram_client_secret = "your-instagram-client-secret"
+instagram_scopes = ["user_profile", "user_media"]
+
+# Dropbox OAuth
+dropbox_enabled = false
+dropbox_client_id = "your-dropbox-app-key"
+dropbox_client_secret = "your-dropbox-app-secret"
+dropbox_scopes = ["account_info.read"]
 
 [api]
 # API configuration
@@ -265,4 +380,3 @@ google_client_secret = "your-google-client-secret"
 github_oauth_enabled = false
 github_client_id = "your-github-client-id"
 github_client_secret = "your-github-client-secret"
-
