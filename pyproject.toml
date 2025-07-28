@@ -76,11 +76,9 @@ dev = [
     
     # TUI Testing
     "textual-dev>=1.5.0",            # Textual development tools
-    "pytest-textual>=0.1.0",         # Textual testing utilities
     "pytest-timeout>=2.2.0",         # Test timeout management
     
     # File system and async testing
-    "pytest-tmp-path>=0.1.0",        # Temporary path fixtures
     "aiofiles>=23.2.1",              # Async file operations for testing
     
     # Development tools
@@ -122,7 +120,6 @@ dependencies = [
     "pytest-timeout>=2.2.0",
     # TUI Testing
     "textual-dev>=1.5.0",
-    "pytest-textual>=0.1.0",
 ]
 
 [tool.hatch.envs.dev.scripts]
