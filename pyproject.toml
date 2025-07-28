@@ -71,7 +71,17 @@ dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.12.0",           # Mocking utilities
     "httpx>=0.25.0",                  # For testing FastAPI endpoints
+    
+    # TUI Testing
+    "textual-dev>=1.5.0",            # Textual development tools
+    "pytest-textual>=0.1.0",         # Textual testing utilities
+    "pytest-timeout>=2.2.0",         # Test timeout management
+    
+    # File system and async testing
+    "pytest-tmp-path>=0.1.0",        # Temporary path fixtures
+    "aiofiles>=23.2.1",              # Async file operations for testing
     
     # Development tools
     "pre-commit>=3.5.0",
