@@ -1,0 +1,268 @@
+# FastAPI Clean Architecture Template - Configuration Example
+# Copy this file to settings.toml and customize for your environment
+
+[default]
+# Application settings
+app_name = "FastAPI Clean Architecture Template"
+app_version = "1.0.0"
+debug = false
+environment = "development"
+
+# Server settings
+host = "0.0.0.0"
+port = 8000
+reload = false
+workers = 1
+
+# Security settings
+secret_key = "your-super-secret-key-change-this-in-production"
+allowed_hosts = ["localhost", "127.0.0.1"]
+cors_origins = ["http://localhost:3000", "http://localhost:8080"]
+
+[database]
+# PostgreSQL database configuration
+url = "postgresql://fastapi_user:fastapi_password@localhost:5432/fastapi_db"
+echo = false
+pool_size = 10
+max_overflow = 20
+pool_timeout = 30
+pool_recycle = 3600
+
+# Database connection retry settings
+retry_attempts = 3
+retry_delay = 1
+
+[redis]
+# Redis configuration for caching and task queue
+url = "redis://localhost:6379/0"
+password = ""
+max_connections = 20
+retry_on_timeout = true
+socket_timeout = 5
+socket_connect_timeout = 5
+
+# Redis connection pool settings
+connection_pool_max_connections = 50
+connection_pool_retry_on_timeout = true
+
+[taskiq]
+# Task queue configuration
+broker_url = "redis://localhost:6379/0"
+result_backend_url = "redis://localhost:6379/1"
+max_retries = 3
+retry_delay = 60
+task_timeout = 300
+worker_concurrency = 4
+
+# Task queue monitoring
+enable_monitoring = true
+monitoring_port = 9001
+
+[rate_limiting]
+# Rate limiting configuration
+enabled = true
+default_rate = "100/minute"
+storage_url = "redis://localhost:6379/2"
+
+# Rate limiting strategies
+api_rate = "1000/hour"
+auth_rate = "10/minute"
+upload_rate = "5/minute"
+
+[logging]
+# Logging configuration
+level = "INFO"
+format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+file_path = "logs/app.log"
+max_file_size = "10MB"
+backup_count = 5
+
+# Log rotation
+rotation = "1 day"
+retention = "30 days"
+compression = "gz"
+
+# Structured logging
+json_logs = false
+include_trace_id = true
+
+[monitoring]
+# Application monitoring
+enable_metrics = true
+metrics_port = 9090
+health_check_interval = 30
+
+# Prometheus metrics
+prometheus_enabled = true
+prometheus_port = 9090
+prometheus_path = "/metrics"
+
+# Grafana dashboard
+grafana_enabled = false
+grafana_port = 3000
+
+[email]
+# Email service configuration (example with SMTP)
+smtp_server = "smtp.gmail.com"
+smtp_port = 587
+smtp_username = "your-email@gmail.com"
+smtp_password = "your-app-password"
+use_tls = true
+from_email = "noreply@yourapp.com"
+from_name = "Your App Name"
+
+[storage]
+# File storage configuration
+upload_path = "uploads/"
+max_file_size = "10MB"
+allowed_extensions = [".jpg", ".jpeg", ".png", ".gif", ".pdf", ".txt"]
+
+# Cloud storage (AWS S3 example)
+use_cloud_storage = false
+aws_access_key_id = "your-access-key"
+aws_secret_access_key = "your-secret-key"
+aws_bucket_name = "your-bucket-name"
+aws_region = "us-east-1"
+
+[security]
+# Security settings
+password_min_length = 8
+password_require_uppercase = true
+password_require_lowercase = true
+password_require_numbers = true
+password_require_special = true
+
+# JWT settings
+jwt_algorithm = "HS256"
+jwt_expire_minutes = 30
+jwt_refresh_expire_days = 7
+
+# Session settings
+session_expire_minutes = 60
+session_cookie_secure = true
+session_cookie_httponly = true
+
+[api]
+# API configuration
+version = "v1"
+title = "FastAPI Clean Architecture API"
+description = "A production-ready FastAPI template with clean architecture"
+docs_url = "/docs"
+redoc_url = "/redoc"
+openapi_url = "/openapi.json"
+
+# API versioning
+enable_versioning = true
+default_version = "v1"
+version_header = "X-API-Version"
+
+[development]
+# Development-specific settings
+debug = true
+reload = true
+log_level = "DEBUG"
+enable_profiler = true
+
+# Development database (SQLite for quick setup)
+use_sqlite = false
+sqlite_path = "dev.db"
+
+# Development email (console backend)
+email_backend = "console"
+
+[testing]
+# Testing configuration
+database_url = "postgresql://test_user:test_password@localhost:5432/test_db"
+redis_url = "redis://localhost:6379/1"
+log_level = "WARNING"
+disable_auth = true
+
+# Test data
+create_test_data = true
+test_user_email = "test@example.com"
+test_user_password = "testpassword123"
+
+[production]
+# Production-specific settings
+debug = false
+log_level = "INFO"
+workers = 4
+enable_ssl = true
+ssl_cert_path = "/path/to/cert.pem"
+ssl_key_path = "/path/to/key.pem"
+
+# Production database with connection pooling
+database_pool_size = 20
+database_max_overflow = 40
+
+# Production Redis with clustering
+redis_cluster_enabled = false
+redis_cluster_nodes = [
+    "redis-node-1:6379",
+    "redis-node-2:6379", 
+    "redis-node-3:6379"
+]
+
+# Production monitoring
+sentry_dsn = "https://your-sentry-dsn@sentry.io/project-id"
+enable_apm = true
+
+[backup]
+# Backup configuration
+enabled = true
+schedule = "0 2 * * *"  # Daily at 2 AM
+retention_days = 30
+backup_path = "/backups"
+
+# Database backup
+database_backup_enabled = true
+database_backup_format = "sql"
+database_backup_compression = true
+
+# File backup
+file_backup_enabled = true
+file_backup_exclude = ["*.log", "*.tmp", "__pycache__"]
+
+[cache]
+# Caching configuration
+default_timeout = 300  # 5 minutes
+key_prefix = "fastapi_app"
+
+# Cache backends
+backend = "redis"  # redis, memory, dummy
+redis_cache_db = 3
+
+# Cache strategies
+enable_query_cache = true
+enable_template_cache = true
+enable_static_cache = true
+
+[features]
+# Feature flags
+enable_user_registration = true
+enable_email_verification = true
+enable_password_reset = true
+enable_two_factor_auth = false
+enable_social_login = false
+enable_file_uploads = true
+enable_notifications = true
+enable_analytics = false
+
+[integrations]
+# Third-party integrations
+stripe_enabled = false
+stripe_public_key = "pk_test_..."
+stripe_secret_key = "sk_test_..."
+
+paypal_enabled = false
+paypal_client_id = "your-paypal-client-id"
+paypal_client_secret = "your-paypal-client-secret"
+
+google_oauth_enabled = false
+google_client_id = "your-google-client-id"
+google_client_secret = "your-google-client-secret"
+
+github_oauth_enabled = false
+github_client_id = "your-github-client-id"
+github_client_secret = "your-github-client-secret"
+

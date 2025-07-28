@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: .
+      target: builder
+    command: hatch run dev:pytest --cov=src --cov-report=xml --cov-report=html
+    environment:
+      - ENVIRONMENT=testing
+      - DATABASE_URL=postgresql://test_user:test_password@postgres:5432/test_db
+      - REDIS_URL=redis://redis:6379/1
+      - TERM=dumb
+      - NO_COLOR=1
+      - TEXTUAL_HEADLESS=1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./tests:/app/tests
+      - ./coverage:/app/coverage
+    networks:
+      - test-network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=test_db
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+    tmpfs:
+      - /data
+
+networks:
+  test-network:
+    driver: bridge
+
