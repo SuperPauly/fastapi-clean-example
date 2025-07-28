@@ -48,6 +48,15 @@ dependencies = [
     "taskiq-redis>=0.5.0",            # Redis broker for Taskiq
     "redis>=5.0.0",                   # Redis client
     
+    # Authentication dependencies
+    "fastapi-users[sqlalchemy]>=12.1.0",  # User management framework
+    "fastapi-users[oauth]>=12.1.0",       # OAuth support for fastapi-users
+    "python-social-auth[fastapi]>=4.4.0", # Social authentication
+    "passlib[bcrypt]>=1.7.4",             # Password hashing
+    "python-jose[cryptography]>=3.3.0",   # JWT token handling
+    "python-multipart>=0.0.6",            # Form data handling
+    "email-validator>=2.0.0",             # Email validation
+    
     # Additional dependencies from main branch
     "pydantic>=2.4.0",
     "pydantic-settings>=2.0.0",
